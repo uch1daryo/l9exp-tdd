@@ -2,10 +2,19 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ReportTest extends TestCase
 {
+    use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('db:seed', ['--class' => 'TestDatabaseSeeder']);
+    }
+
     public function testApiGetCustomersStatusCode()
     {
         $response = $this->get('api/customers');
@@ -14,7 +23,10 @@ class ReportTest extends TestCase
 
     public function testApiPostCustomersStatusCode()
     {
-        $response = $this->post('api/customers');
+        $params = [
+            'name' => 'customer_name',
+        ];
+        $response = $this->postJson('api/customers', $params);
         $response->assertStatus(200);
     }
 
@@ -64,5 +76,34 @@ class ReportTest extends TestCase
     {
         $response = $this->delete('api/reports/1');
         $response->assertStatus(200);
+    }
+
+    public function testApiGetCustomersJson()
+    {
+        $response = $this->get('api/customers');
+        $this->assertThat($response->content(), $this->isJson());
+    }
+
+    public function testApiGetCustomersJsonFormat()
+    {
+        $response = $this->get('api/customers');
+        $customers = $response->json();
+        $customer = $customers[0];
+        $this->assertSame(['id', 'name'], array_keys($customer));
+    }
+
+    public function testApiGetCustomersJsonCount()
+    {
+        $response = $this->get('api/customers');
+        $response->assertJsonCount(2);
+    }
+
+    public function testApiPostCustomersJson()
+    {
+        $params = [
+            'name' => '顧客名',
+        ];
+        $this->postJson('api/customers', $params);
+        $this->assertDatabaseHas('customers', $params);
     }
 }
