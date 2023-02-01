@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ReportTest extends TestCase
@@ -105,5 +106,21 @@ class ReportTest extends TestCase
         ];
         $this->postJson('api/customers', $params);
         $this->assertDatabaseHas('customers', $params);
+    }
+
+    public function testApiPostCustomersWithoutName()
+    {
+        $params = [];
+        $response = $this->postJson('api/customers', $params);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+    }
+
+    public function testApiPostCustomersWithEmptyName()
+    {
+        $params = ['name' => ''];
+        $response = $this->postJson('api/customers', $params);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+
     }
 }

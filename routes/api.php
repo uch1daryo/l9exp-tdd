@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,9 @@ Route::get('customers', function () {
     return response()->json(Customer::select(['id', 'name'])->get());
 });
 Route::post('customers', function (Request $request) {
+    if (!$request->json('name')) {
+        return response()->make('', Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
     $customer = new Customer();
     $customer->name = $request->json('name');
     $customer->save();
