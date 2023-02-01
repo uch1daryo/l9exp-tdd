@@ -23,4 +23,36 @@ class ApiController extends Controller
         $customer->name = $request->json('name');
         $customer->save();
     }
+
+    public function getCustomer()
+    {
+    }
+
+    public function putCustomer()
+    {
+    }
+
+    public function deleteCustomer()
+    {
+    }
+
+    public function getReports()
+    {
+    }
+
+    public function postReports()
+    {
+    }
+
+    public function getReport()
+    {
+    }
+
+    public function putReport()
+    {
+    }
+
+    public function deleteReport()
+    {
+    }
 }
