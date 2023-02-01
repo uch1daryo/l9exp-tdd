@@ -16,9 +16,7 @@ class ApiController extends Controller
 
     public function postCustomers(Request $request)
     {
-        if (!$request->json('name')) {
-            return response()->make('', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->validate($request, ['name' => 'required']);
         $customer = new Customer();
         $customer->name = $request->json('name');
         $customer->save();
